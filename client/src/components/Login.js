@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 //ultils
@@ -10,14 +11,17 @@ const Login = () => {
     password: ''
   });
 
+  const history= useHistory();
+
   // make a post request to retrieve a token from the api
   const handleLogInSubmit= (e) => {
     e.preventDefault();
     axios
       .post('http://localhost:5000/api/login', logInFormValue)
       .then(res => {
-        console.log(res.data.payload);
-        window.localStorage.setItem('token', res.data.payload)
+        console.log('log in res: ', res);
+        window.localStorage.setItem('token', res.data.payload);
+        history.push('/bubblesPage');
       })
       .catch(err => {console.log(err.response.data.error);})
     console.log('submitted!', logInFormValue);
