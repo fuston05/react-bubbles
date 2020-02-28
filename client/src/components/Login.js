@@ -1,32 +1,34 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
+import axios from 'axios';
 
 //ultils
 import {axiosWithAuth} from '../utils/axiosWithAuth';
 
 const Login = () => {
-  const [logInFormValue, setLogInFormValue]= useState({});
+  const [logInFormValue, setLogInFormValue]= useState({
+    username: '',
+    password: ''
+  });
 
   // make a post request to retrieve a token from the api
   const handleLogInSubmit= (e) => {
     e.preventDefault();
-
-    axiosWithAuth()
-      .post('/api/login', {logInFormValue})
+    axios
+      .post('http://localhost:5000/api/login', logInFormValue)
       .then(res => {
-        console.log(res);
+        console.log(res.data.payload);
+        window.localStorage.setItem('token', res.data.payload)
       })
       .catch(err => {console.log(err.response.data.error);})
-
-    console.log('submitted!');
+    console.log('submitted!', logInFormValue);
   }//end handleLogInSubmit
-  // when you have handled the token, navigate to the BubblePage route
 
   const handleChange= e => {
-    console.log('change: ', e.target.value);
     setLogInFormValue({
       ...logInFormValue,
       [e.target.name]: e.target.value
     });
+    console.log('change: ', e.target.value);
   }//end handleChange
 
   return (
